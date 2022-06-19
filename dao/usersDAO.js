@@ -90,8 +90,8 @@ exports.userDataAccess =  class  {
 
  static returnBook = async function (user,book){
     if(user.totalBooksIssued>0)user.totalBooksIssued--;
-    
-    let bookArray = user.issuedBooks.filter(item=>item._id !== book._id);
+    //console.log('userctrl:93',user,book);
+    let bookArray = user.issuedBooks.filter(item=>item.ISBN !== book.ISBN);
     user.issuedBooks = bookArray;
     await user.save();
  }

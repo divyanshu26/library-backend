@@ -87,7 +87,7 @@ static getOneBook = async function(isbnObj){
 }
 
 static issueBook = async function(user,book){
-    console.log(book,user);
+   // console.log(book,user);
     if(book.status === bookStatus.Available){
       book.issuedBy = user._id;
       book.issueDate = new Date();

@@ -24,8 +24,6 @@ static issueBook = async function(req,res){
 
         let oneBook = (await booksDataAccess.getOneBook({...req.body}));
         oneBook = oneBook.shift(); 
-        console.log(oneBook);
-        
         if(oneBook.status === bookStatus.Available){
             await userDataAccess.issueBook(user,oneBook);
             await booksDataAccess.issueBook(user, oneBook);
@@ -46,7 +44,7 @@ static returnBook = async function(req,res){
     let user = req.user;
     let oneBook = (await booksDataAccess.getOneBook({...req.body}));
     oneBook = oneBook.shift(); 
-    console.log(user);
+    //console.log(user);
     try{
         if(oneBook.status === bookStatus.Issued){
             await userDataAccess.returnBook(user,oneBook);
@@ -73,7 +71,16 @@ static reserveBook = async (req,res)=>{
         oneBook = oneBook.shift(); 
         if(oneBook.reservedBy.length >= Constants.MAX_RESERVE_ONE_BOOK) throw new Error('Book Reserve Queue Full .Please Try Later');
         console.log('reserveBook',oneBook);
-        
+        if(user.issuedBooks.length){
+            user.issuedBooks.forEach(element => {
+                if(element.ISBN === oneBook.ISBN)throw new Error('Book issued by same user')
+            });
+        }
+        if(user.reservedBooks.length){
+            user.reservedBooks.forEach(element => {
+                if(element.ISBN === oneBook.ISBN)throw new Error('Book reserveed by same user')
+            });
+        }
         if(oneBook.status === bookStatus.Issued){
             await userDataAccess.reserveBook(user,oneBook);
             await booksDataAccess.reserveBook(user, oneBook);
@@ -96,7 +103,7 @@ static removeBookReservation = async (req,res)=>{
         //throw 'err';
         
         if(oneBook.reservedBy.length > 0){
-            await userDataAccess.removeReservation(user,oneBook);
+            //await userDataAccess.removeReservation(user,oneBook);
             await booksDataAccess.removeReservation(user, oneBook);
             console.log(oneBook,user);
             res.status(200).send({'status':'success'})
