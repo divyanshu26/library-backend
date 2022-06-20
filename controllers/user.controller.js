@@ -17,7 +17,6 @@ static getUser = async (req,res)=>{
 }
 
 static issueBook = async function(req,res){
-    console.log('issue book');
     try{
         let user = req.user;
         if(user.totalBooksIssued >= Constants.MAX_BOOKS_ALLOWED)throw new Error('Max Issue Limit Reached');
@@ -56,7 +55,7 @@ static returnBook = async function(req,res){
         };
     }catch(err){
         console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',err);
-        res.status(200).send({'status':err.message});
+        res.status(200).send({'status':'server error'});
     }
    // console.log(booksModel.findo)
 }
@@ -70,7 +69,7 @@ static reserveBook = async (req,res)=>{
         let oneBook = (await booksDataAccess.getOneBook({...req.body}));
         oneBook = oneBook.shift(); 
         if(oneBook.reservedBy.length >= Constants.MAX_RESERVE_ONE_BOOK) throw new Error('Book Reserve Queue Full .Please Try Later');
-        console.log('reserveBook',oneBook);
+        //console.log('reserveBook',oneBook);
         if(user.issuedBooks.length){
             user.issuedBooks.forEach(element => {
                 if(element.ISBN === oneBook.ISBN)throw new Error('Book issued by same user')
@@ -90,7 +89,7 @@ static reserveBook = async (req,res)=>{
         };
     }catch(err){
         console.log('user-ctrl:85',err)
-        res.status(500).send({'status':'internal server error'})
+        res.status(200).send({'status':err.message})
     }
 }
 
@@ -101,14 +100,13 @@ static removeBookReservation = async (req,res)=>{
         oneBook = oneBook.shift(); 
         //console.log(oneBook,user);
         //throw 'err';
-        
         if(oneBook.reservedBy.length > 0){
-            //await userDataAccess.removeReservation(user,oneBook);
+            await userDataAccess.removeReservation(user,oneBook);
             await booksDataAccess.removeReservation(user, oneBook);
             console.log(oneBook,user);
             res.status(200).send({'status':'success'})
         }else{
-            res.status(200).send({'status':'book is not reserved by anyone .'})
+            res.status(200).send({'status':'Book is not reserved'})
         };
     }catch(err){
         console.log('user-ctrl:85',err)

@@ -27,7 +27,7 @@ app.use((req,res,next)=>{
   res.set('Access-Control-Allow-Origin','*');
   if(isPreFlight(req)){
     res.set('Access-Control-Allow-Methods',['GET, DELETE','POST']);
-    res.set('Access-Control-Allow-Headers','Content-Type');
+    res.set('Access-Control-Allow-Headers',['Content-Type','authorization']);
     res.status(204).end();
     return;
   }

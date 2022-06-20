@@ -82,6 +82,9 @@ exports.userDataAccess =  class  {
     obj.ISBN = book.ISBN;
     obj.publicationDate = book.publicationDate;
     obj.title = book.title;
+    obj.issueDate = new Date();
+      obj.dueDate = new Date();
+      obj.dueDate.setDate(obj.dueDate.getDate() + 10);
     user.issuedBooks.push(obj);
     user.totalBooksIssued++;
 
