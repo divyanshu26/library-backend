@@ -43,6 +43,7 @@ const userSchema = new Schema({
 });
 
 userSchema.pre('save',function(next){
+    console.log('hashing password');
     const user = this;
    
     bcrypt.genSalt(10,function(err,salt){
@@ -64,8 +65,9 @@ userSchema.pre('save',function(next){
 
 userSchema.methods.comparePassword = function(candidatePassword, callback){
     //console.log(this,'passport################################',candidatePassword)
+
     bcrypt.compare(candidatePassword,this.password,(err,isMatch)=>{
-        
+        console.log(candidatePassword,this.password,isMatch);
         if(err)return callback(err);
 
         callback(null,isMatch); 
@@ -87,8 +89,7 @@ exports.userDataAccess =  class  {
       obj.dueDate.setDate(obj.dueDate.getDate() + 10);
     user.issuedBooks.push(obj);
     user.totalBooksIssued++;
-
-    await user.save();
+    await user.updateOne(user);
  }
 
  static returnBook = async function (user,book){
@@ -96,7 +97,8 @@ exports.userDataAccess =  class  {
     //console.log('userctrl:93',user,book);
     let bookArray = user.issuedBooks.filter(item=>item.ISBN !== book.ISBN);
     user.issuedBooks = bookArray;
-    await user.save();
+    
+    await user.updateOne(user);
  }
 
 
@@ -109,14 +111,14 @@ exports.userDataAccess =  class  {
     user.reservedBooks.push(obj);
     user.totalBooksReserved++;
 
-    await user.save();
+    await user.updateOne(user);
  }
 
  static removeReservation = async (user,book)=>{
     if(user.totalBooksReserved > 0)user.totalBooksReserved--;
     let bookArray = user.reservedBooks.filter(item=>item.ISBN !== book.ISBN);
     user.reservedBooks = bookArray;
-    await user.save();
+    await user.updateOne(user);
  }
 }
 

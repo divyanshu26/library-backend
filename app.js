@@ -13,7 +13,7 @@ var app = express();
 app.use(logger('dev'));
 app.use(express.json());
 app.use((req,res,next)=>{
-  console.log(req.body,'%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%',req.url);
+  console.log(req.body,req.url);
   next();
 });
 app.use(bodyParser.json());
@@ -46,7 +46,7 @@ mongoose.connect(
 }).then(async (client)=>{
   console.log('connected');
   //console.log(client === mongoose,mongoose.__proto__);
-  console.log(mongoose.__proto__ === mongoose.Mongoose.prototype);
+  //console.log(mongoose.__proto__ === mongoose.Mongoose.prototype);
   client.connection.db.listCollections().toArray((err,names)=>{
     console.log(err,names);
   });

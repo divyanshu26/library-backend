@@ -12,7 +12,7 @@ function getToken(user){
 };
 
 async function signup(req,res,next){
-    console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&',req.body);
+    //console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&',req.body);
     try{
         const email = req.body.email;
     const password = req.body.password;
@@ -23,6 +23,7 @@ async function signup(req,res,next){
         return;
     };
     const user = await userModel.findOne({email:email});
+    //console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^',user);
     if(!user){
         const new_user = new userModel({...req.body});
         const data = await new_user.save();

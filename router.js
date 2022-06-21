@@ -13,10 +13,10 @@ const requireSignIn = passport.authenticate('local',{session:false});
 
 const userCtrl = require('./controllers/user.controller');
 
-router.use((req,res,next)=>{
-    console.log('router');
-    next();
-})
+// router.use((req,res,next)=>{
+//     console.log('router');
+//     next();
+// })
 
 // router.use('/signup',(req,res,next)=>{
 

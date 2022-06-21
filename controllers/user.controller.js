@@ -31,7 +31,7 @@ static issueBook = async function(req,res){
             res.status(200).send({'status':'book is already issued .'})
         };
     }catch(err){
-        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',err);
+        console.log('user-ctrl:34',err);
         res.status(200).send({'status':err.message});
     }
    // console.log(booksModel.findo)
@@ -39,7 +39,6 @@ static issueBook = async function(req,res){
 
 static returnBook = async function(req,res){
     //checkfor FIne here
-    console.log('return book');
     let user = req.user;
     let oneBook = (await booksDataAccess.getOneBook({...req.body}));
     oneBook = oneBook.shift(); 
@@ -54,7 +53,7 @@ static returnBook = async function(req,res){
             res.status(200).send({'status':'book is not issued,cant be returned .'})
         };
     }catch(err){
-        console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',err);
+        console.log('user-ctrl:57',err);
         res.status(200).send({'status':'server error'});
     }
    // console.log(booksModel.findo)
@@ -62,7 +61,6 @@ static returnBook = async function(req,res){
 
 
 static reserveBook = async (req,res)=>{
-    console.log('reserve')
     try{
         let user = req.user;
         if(user.totalBooksReserved >= Constants.MAX_RESERVED_BOOKS)throw new Error('Max Reserve Limit Reached');
@@ -109,7 +107,7 @@ static removeBookReservation = async (req,res)=>{
             res.status(200).send({'status':'Book is not reserved'})
         };
     }catch(err){
-        console.log('user-ctrl:85',err)
+        console.log('user-ctrl:112',err)
         res.status(500).send({'status':'internal server error'})
     }
 }
